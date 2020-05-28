@@ -1,40 +1,15 @@
 const Cell = require("./Cell");
+const Board = require("./Board");
+const Game = require("./Game");
 
-const getSiblingsPosition = ({ cellX, cellY }, { maxX, maxY }) => {
-  let arraySiblings = [];
-  const getMinMax = (item, max) => [
-    item === 0 ? 0 : item - 1,
-    item === max ? max : item + 1,
-  ];
-
-  [minX, maxX] = getMinMax(cellX, maxX);
-  [minY, maxY] = getMinMax(cellY, maxY);
-
-  for (let x = minX; x <= maxX; x++) {
-    for (let y = minY; y <= maxY; y++) {
-      if (x === cellX && y === cellY) {
-        continue;
-      }
-      arraySiblings.push({ x, y });
-    }
-  }
-  return arraySiblings;
+const getRamdamliTrueFalse = () => {
+  const randomNamber = Math.floor(Math.random() * 10);
+  return randomNamber > 3 ? true : false;
 };
 
-let [width, height] = [20, 20];
-let board = [...new Array(height)].map((row, rowIndex) =>
-  [...new Array(width)].map(
-    (item, columnIndex) =>
-      new Cell(
-        false,
-        getSiblingsPosition(
-          { cellX: columnIndex, cellY: rowIndex },
-          { maxX: width - 1, maxY: height - 1 }
-        )
-      )
-  )
+let snap = [...new Array(20)].map(() =>
+  [...new Array(20)].map(() => getRamdamliTrueFalse())
 );
-board.forEach((row) => row.forEach((item) => item.addSiblings(board)));
-board.forEach((row) => row.forEach((item) => item.livesCounter()));
-board.forEach((row) => row.forEach((item) => item.checkLifeOrDeth()));
-console.log(board);
+const board = new Board(snap, Cell);
+const game = new Game(board);
+console.log(game.snapShots);

@@ -1,10 +1,9 @@
 class Cell {
-  constructor(alive, siblingsPositions, board) {
+  constructor(alive, siblingsPositions) {
     this.alive = alive;
     this.siblingsPositions = siblingsPositions;
     this.aliveSiblings = 0;
     this.sibligs = [];
-    this.board = board;
   }
 
   addSiblings(boardOfCells) {
@@ -15,27 +14,20 @@ class Cell {
   livesCounter() {
     this.aliveSiblings = 0;
     this.sibligs.forEach((cell) => {
-      cell.alive ? ++this.aliveSiblings : "";
+      cell.alive ? ++this.aliveSiblings : null;
     });
   }
   checkLifeOrDeth() {
     if (this.alive) {
       if (this.aliveSiblings < 2 || this.aliveSiblings > 3) {
         this.alive = false;
-        dying();
-      } else {
-        if (this.aliveSiblings === 3) {
-          this.alive === true;
-          birth();
-        }
+      }
+    } else {
+      if (this.aliveSiblings === 3) {
+        this.alive === true;
       }
     }
   }
-  dying() {
-    this.board.addToDeathList(this);
-    this.board.removeFromLiveList(this);
-  }
-  birth() {}
 }
 
 module.exports = Cell;
