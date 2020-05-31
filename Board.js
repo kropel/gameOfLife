@@ -6,6 +6,7 @@ class Board {
     this.board = this.setBoard(board);
   }
   setBoard(board) {
+    //setup of siblings positions
     board = board.map((row, rowIndex) =>
       row.map(
         (item, columnIndex) =>
@@ -18,6 +19,8 @@ class Board {
           )
       )
     );
+    //setup cells sibing in cell.sibling array
+    board.forEach((row) => row.forEach((cell) => cell.addSiblings(board)));
     this.board = board;
     return board;
   }
