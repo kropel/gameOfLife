@@ -14,7 +14,7 @@ class Cell {
   livesCounter() {
     this.aliveSiblings = 0;
     this.sibligs.forEach((cell) => {
-      cell.alive ? ++this.aliveSiblings : null;
+      if (cell.alive) ++this.aliveSiblings;
     });
   }
   checkLifeOrDeth() {
@@ -24,7 +24,7 @@ class Cell {
       }
     } else {
       if (this.aliveSiblings === 3) {
-        this.alive === true;
+        this.alive = true;
       }
     }
   }
