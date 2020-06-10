@@ -1,0 +1,21 @@
+.Squer {
+  background-color: floralwhite;
+  border: 1px solid #888;
+  border-right: none;
+  border-bottom: none;
+
+  width: 10px;
+  height: 10px;
+}
+.Squer:last-child {
+  border-right: 1px solid #888;
+}
+.Squer:hover {
+  background-color: royalblue;
+}
+.Alive {
+  background-color: limegreen;
+}
+.Alive:hover {
+  background-color: darkorange;
+}

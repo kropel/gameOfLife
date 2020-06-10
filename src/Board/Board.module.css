@@ -1,0 +1,7 @@
+.Row {
+  display: flex;
+  flex-direction: row;
+}
+.Row:last-child > * {
+  border-bottom: 1px solid #888;
+}

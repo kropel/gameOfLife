@@ -10,7 +10,6 @@ class Game {
         row.forEach((item, indexX) => (this.board[indexY][indexX].alive = item))
       );
     }
-
     let snap = () => this.board.map((row) => row.map((item) => item.alive));
     let snapShots = [snap()];
 
