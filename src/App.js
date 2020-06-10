@@ -4,6 +4,7 @@ import Board from "./Board/Board";
 import BoardClass from "./services/Board";
 import Game from "./services/Game";
 import Cell from "./services/Cell";
+import useInterval from "./hooks/useInterval";
 
 let [width, heigth] = [40, 40];
 const emptyBoard = (width, heigth) =>
@@ -12,25 +13,17 @@ const startBoard = emptyBoard(width, heigth);
 
 function App() {
   const [step, setStep] = useState(0);
-  const [snapShots, setSnapShots] = useState(null);
+  const [snapShots, setSnapShots] = useState([[]]);
   const [board, setBoard] = useState(startBoard);
   const [select, setSelect] = useState(false);
-  const [loop, setLoop] = useState(null);
+  const [isRunning, setRunning] = useState(null);
+  const [delay, setDelay] = useState(300);
   const boardTemp = [...board];
-  let inter = null;
 
   let game = useMemo(() => {
     const boardClass = new BoardClass(startBoard, Cell);
     return new Game(boardClass.board);
-  }, [startBoard]);
-
-  useEffect(() => {
-    console.log("App.js redered...");
-    return () => {
-      console.log("App.js unmount...");
-      clearInterval(loop);
-    };
-  }, []);
+  });
 
   const selectBox = (x, y) => {
     if (select) {
@@ -44,28 +37,37 @@ function App() {
     setBoard(boardTemp);
   };
 
-  const setNewShots = () => {
-    let newSnapShots = game.getSnapShots(board);
-    setSnapShots(newSnapShots);
-    setStep(0);
-  };
-
-  const nextStep = (step) => {
-    setStep(step + 1);
-    if (snapShots) {
-      setBoard(snapShots[step]);
+  const setNewShots = (board = null) => {
+    if (board) {
+      let newSnapShots = game.getSnapShots(board);
+      setSnapShots(snapShots.slice(0, step + 1).concat(newSnapShots));
     }
   };
 
+  const nextStep = () => {
+    if (step > snapShots.length - 10) {
+      setNewShots(snapShots[snapShots.length - 1]);
+    }
+    if (snapShots.length > 1) {
+      setBoard(snapShots[step + 1]);
+    }
+    setStep(step + 1);
+  };
+
+  useInterval(nextStep, isRunning ? delay : null);
+
   const start = () => {
-    setNewShots();
-    inter = setInterval(nextStep(step), 500, step);
+    setNewShots(board);
+    setRunning(true);
   };
 
   const stop = () => {
-    if (!!loop) {
-      clearInterval(inter);
-    }
+    setRunning(null);
+  };
+
+  const rangeSliderHandler = (e) => {
+    setStep(e.target.value);
+    setBoard(snapShots[e.target.value]);
   };
 
   const boardConfig = { board, clickListener, setSelect, selectBox };
@@ -73,6 +75,13 @@ function App() {
   return (
     <div className="App">
       <Board {...boardConfig} />
+      <input
+        type="range"
+        value={step}
+        min="0"
+        max={snapShots.length - 1}
+        onChange={rangeSliderHandler}
+      />
       <button
         onClick={() => {
           nextStep(step);
@@ -80,7 +89,6 @@ function App() {
       >
         Next({step})
       </button>
-      <button onClick={setNewShots}>Ustaw tablice</button>
       <button onClick={start}>Start</button>
       <button onClick={stop}>Stop</button>
     </div>
