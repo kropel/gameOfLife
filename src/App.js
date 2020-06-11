@@ -18,7 +18,7 @@ function App() {
   const [select, setSelect] = useState(false);
   const [isRunning, setRunning] = useState(null);
   const [delay, setDelay] = useState(300);
-  const boardTemp = [...board];
+  const [isBoardChange, setBoardChange] = useState(false);
 
   let game = useMemo(() => {
     const boardClass = new BoardClass(startBoard, Cell);
@@ -27,37 +27,54 @@ function App() {
 
   const selectBox = (x, y) => {
     if (select) {
+      const boardTemp = [...board];
+      stop();
       boardTemp[y][x] = !boardTemp[y][x];
       setBoard(boardTemp);
+      setBoardChange(true);
     }
   };
 
   const clickListener = (x, y) => {
+    stop();
+    const boardTemp = [...board];
     boardTemp[y][x] = !boardTemp[y][x];
     setBoard(boardTemp);
+    setBoardChange(true);
   };
 
   const setNewShots = (board = null) => {
     if (board) {
       let newSnapShots = game.getSnapShots(board);
-      setSnapShots(snapShots.slice(0, step + 1).concat(newSnapShots));
+      setSnapShots(snapShots.slice(0, step).concat(newSnapShots));
     }
   };
 
-  const nextStep = () => {
-    if (step > snapShots.length - 10) {
-      setNewShots(snapShots[snapShots.length - 1]);
+  const nextStep = (next = null) => {
+    next = next ?? step + 1;
+
+    if (next > snapShots.length - 10) {
+      setSnapShots(
+        snapShots.concat(game.getSnapShots(snapShots[snapShots.length - 1]))
+      );
     }
-    if (snapShots.length > 1) {
-      setBoard(snapShots[step + 1]);
+
+    if (snapShots.length > 0) {
+      setBoard(snapShots[next]);
     }
-    setStep(step + 1);
+
+    setStep(next);
   };
 
-  useInterval(nextStep, isRunning ? delay : null);
+  const setIntervalCallback = useInterval(nextStep, isRunning ? delay : null);
 
   const start = () => {
-    setNewShots(board);
+    if (isBoardChange) {
+      setBoardChange(false);
+      setNewShots(board);
+    }
+
+    setIntervalCallback(nextStep);
     setRunning(true);
   };
 
@@ -66,11 +83,28 @@ function App() {
   };
 
   const rangeSliderHandler = (e) => {
-    setStep(e.target.value);
-    setBoard(snapShots[e.target.value]);
+    stop();
+    nextStep(Number(e.target.value));
   };
 
   const boardConfig = { board, clickListener, setSelect, selectBox };
+
+  const faster = () => {
+    setDelay(delay - delay / 2);
+  };
+
+  const slower = () => {
+    setDelay(delay * 2);
+  };
+
+  const reset = () => {
+    stop();
+    const resetBoard = emptyBoard(width, heigth);
+    setBoard(resetBoard);
+    setSnapShots(resetBoard);
+    setStep(0);
+    setBoardChange(true);
+  };
 
   return (
     <div className="App">
@@ -81,16 +115,21 @@ function App() {
         min="0"
         max={snapShots.length - 1}
         onChange={rangeSliderHandler}
+        disabled={isRunning}
       />
       <button
         onClick={() => {
-          nextStep(step);
+          nextStep();
         }}
       >
         Next({step})
       </button>
       <button onClick={start}>Start</button>
       <button onClick={stop}>Stop</button>
+      <p>Speed: {delay}</p>
+      <button onClick={faster}>Faster</button>
+      <button onClick={slower}>Slower</button>
+      <button onClick={reset}>Reset</button>
     </div>
   );
 }

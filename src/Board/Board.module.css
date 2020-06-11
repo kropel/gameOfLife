@@ -2,6 +2,6 @@
   display: flex;
   flex-direction: row;
 }
-.Row:last-child > * {
+.Row:last-of-type > * {
   border-bottom: 1px solid #888;
 }
