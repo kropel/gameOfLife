@@ -12,9 +12,12 @@ const emptyBoard = (width, heigth) =>
 const startBoard = emptyBoard(width, heigth);
 
 function App() {
+  const [demention, setDemention] = useState({ width: 40, heigth: 40 });
   const [step, setStep] = useState(0);
   const [snapShots, setSnapShots] = useState([[]]);
-  const [board, setBoard] = useState(startBoard);
+  const [board, setBoard] = useState(
+    emptyBoard(demention.width, demention.heigth)
+  );
   const [select, setSelect] = useState(false);
   const [isRunning, setRunning] = useState(null);
   const [delay, setDelay] = useState(300);
@@ -24,6 +27,10 @@ function App() {
     const boardClass = new BoardClass(startBoard, Cell);
     return new Game(boardClass.board);
   });
+
+  useEffect(() => {
+    setBoard(emptyBoard(demention.width, demention.heigth));
+  }, [demention.width, demention.heigth]);
 
   const selectBox = (x, y) => {
     if (select) {
@@ -64,6 +71,12 @@ function App() {
     }
 
     setStep(next);
+  };
+
+  const previous = () => {
+    let previousStep = step <= 0 ? 0 : step - 1;
+    setStep(previousStep);
+    setBoard(snapShots[previousStep]);
   };
 
   const setIntervalCallback = useInterval(nextStep, isRunning ? delay : null);
@@ -108,28 +121,42 @@ function App() {
 
   return (
     <div className="App">
-      <Board {...boardConfig} />
-      <input
-        type="range"
-        value={step}
-        min="0"
-        max={snapShots.length - 1}
-        onChange={rangeSliderHandler}
-        disabled={isRunning}
-      />
-      <button
-        onClick={() => {
-          nextStep();
-        }}
-      >
-        Next({step})
-      </button>
-      <button onClick={start}>Start</button>
-      <button onClick={stop}>Stop</button>
-      <p>Speed: {delay}</p>
-      <button onClick={faster}>Faster</button>
-      <button onClick={slower}>Slower</button>
-      <button onClick={reset}>Reset</button>
+      <div>
+        <Board {...boardConfig} />
+      </div>
+      <div>
+        <input
+          type="range"
+          value={step}
+          min="0"
+          max={snapShots.length - 1}
+          onChange={rangeSliderHandler}
+          disabled={isRunning}
+        />
+        <p>Step: {step}</p>
+        <button
+          onClick={() => {
+            stop();
+            previous();
+          }}
+        >
+          Previous
+        </button>
+        <button
+          onClick={() => {
+            stop();
+            nextStep();
+          }}
+        >
+          Next
+        </button>
+        <button onClick={start}>Start</button>
+        <button onClick={stop}>Stop</button>
+        <p>Refresh in {(delay / 1000).toFixed(2)}s</p>
+        <button onClick={faster}>Faster</button>
+        <button onClick={slower}>Slower</button>
+        <button onClick={reset}>Reset</button>
+      </div>
     </div>
   );
 }
