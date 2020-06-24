@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/kropel/gameOfLife/static/css/main.08737919.chunk.css",
+    "main.js": "/kropel/gameOfLife/static/js/main.7532fe28.chunk.js",
+    "main.js.map": "/kropel/gameOfLife/static/js/main.7532fe28.chunk.js.map",
+    "runtime-main.js": "/kropel/gameOfLife/static/js/runtime-main.17acf94c.js",
+    "runtime-main.js.map": "/kropel/gameOfLife/static/js/runtime-main.17acf94c.js.map",
+    "static/js/2.b868f8a4.chunk.js": "/kropel/gameOfLife/static/js/2.b868f8a4.chunk.js",
+    "static/js/2.b868f8a4.chunk.js.map": "/kropel/gameOfLife/static/js/2.b868f8a4.chunk.js.map",
+    "index.html": "/kropel/gameOfLife/index.html",
+    "precache-manifest.67e6f1ff49f76c383a3f4b665fe37331.js": "/kropel/gameOfLife/precache-manifest.67e6f1ff49f76c383a3f4b665fe37331.js",
+    "service-worker.js": "/kropel/gameOfLife/service-worker.js",
+    "static/css/main.08737919.chunk.css.map": "/kropel/gameOfLife/static/css/main.08737919.chunk.css.map",
+    "static/js/2.b868f8a4.chunk.js.LICENSE.txt": "/kropel/gameOfLife/static/js/2.b868f8a4.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.17acf94c.js",
+    "static/js/2.b868f8a4.chunk.js",
+    "static/css/main.08737919.chunk.css",
+    "static/js/main.7532fe28.chunk.js"
+  ]
+}
